@@ -7,6 +7,7 @@
 
 import EventKit
 import Foundation
+import Dispatch
 
 enum CalSyncError: Error {
     case runtimeError(String)
@@ -17,7 +18,6 @@ func printCalendars(calendars: [EKCalendar]) {
         print("\(index + 1). \(calendar.title) - \(calendar.source.title)")
     }
 }
-
 
 func selectCalendar(calendars: [EKCalendar]) throws -> EKCalendar {
     guard !calendars.isEmpty else {
@@ -49,15 +49,39 @@ func selectNumDays() -> Int {
     }
 }
 
-func getCalSyncEvents(eventStore: EKEventStore, predicate: NSPredicate) -> [EKEvent] {
+func getEventsNextXDays(calendar: EKCalendar, eventStore: EKEventStore, numDays: Int) -> [EKEvent] {
+    
+    let endOfHorizon = Calendar.current.date(byAdding: .day, value: numDays, to: today)!
+    let predicate = eventStore.predicateForEvents(withStart: today, end: endOfHorizon, calendars: [calendar])
     let events = eventStore.events(matching: predicate)
+    return events
+}
+
+func getNonCalSyncEventsNextXDays(calendar: EKCalendar, eventStore: EKEventStore, numDays: Int) -> [EKEvent] {
+    let events = getEventsNextXDays(calendar: calendar, eventStore: eventStore, numDays: numDays)
+    let nonCalSyncEvents = events.filter { event in
+        return !(event.notes?.contains("Made by CalSync") == true)
+    }
+    return nonCalSyncEvents
+}
+
+func getCalSyncEventsNextXDays(calendar: EKCalendar, eventStore: EKEventStore, numDays: Int) -> [EKEvent] {
+    let events = getEventsNextXDays(calendar: calendar, eventStore: eventStore, numDays: numDays)
     let calSyncEvents = events.filter { event in
         return event.notes?.contains("Made by CalSync") == true
     }
-    
     return calSyncEvents
 }
 
+func deleteEvents(eventStore: EKEventStore, events: [EKEvent]) {
+    for event in events {
+        do {
+            try eventStore.remove(event, span: .thisEvent)
+        } catch {
+            print("Error deleting event: \(event) \(error.localizedDescription)")
+        }
+    }
+}
 
 func main() {
     let asciiArtBanner = """
@@ -94,23 +118,14 @@ func main() {
                 
                 print("\nEnter the name of the generic event to use:")
                 if let eventName = readLine() {
-                    let today = Calendar.current.startOfDay(for: Date())
-                    let endOfHorizon = Calendar.current.date(byAdding: .day, value: numDays, to: today)!
-                    let pullPredicate = eventStore.predicateForEvents(withStart: today, end: endOfHorizon, calendars: [pullCalendar])
-                    let pushPredicate = eventStore.predicateForEvents(withStart: today, end: endOfHorizon, calendars: [pushCalendar])
+                    // Clear out current CalSync events over sync horizon
+                    let calSyncEvents = getCalSyncEventsNextXDays(calendar: pushCalendar, eventStore: eventStore, numDays: numDays)
                     
-                    let calSyncEvents = getCalSyncEvents(eventStore: eventStore, predicate: pushPredicate)
+                    deleteEvents(eventStore: eventStore, events: calSyncEvents)
                     
-                    for event in calSyncEvents {
-                        do {
-                            try eventStore.remove(event, span: .thisEvent)
-                        } catch {
-                            print("Error deleting event: \(event) \(error.localizedDescription)")
-                        }
-                    }
-                    
+                    // Make new events
                     print("\nSyncing Events")
-                    let events = eventStore.events(matching: pullPredicate)
+                    let events = getNonCalSyncEventsNextXDays(calendar: pullCalendar, eventStore: eventStore, numDays: numDays)
                     for event in events {
                         print("Event: \(String(describing: event.title))")
                         let newEvent = EKEvent(eventStore: eventStore)
@@ -138,9 +153,9 @@ func main() {
     }
 }
 
+let today = Calendar.current.startOfDay(for: Date())
+
 // Call the main function
 main()
 
 RunLoop.main.run()
-
-
