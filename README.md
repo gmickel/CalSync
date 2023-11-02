@@ -3,7 +3,7 @@
 1. Download the CalSync executable from one of the releases (the one just called `CalSync` in the Assets section)
 2. Open a terminal wherever you downloaded the executable
 3. Move the executable with `mv CalSync /usr/local/bin/`
-4. Make it executable with `chmod +x /user/local/bin/CalSync`
+4. Make it executable with `chmod +x /usr/local/bin/CalSync`
 5. Verify that the installation is working by executing `CalSync` in any terminal
 6. You're done!
 
