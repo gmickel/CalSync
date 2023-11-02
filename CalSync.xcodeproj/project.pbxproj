@@ -7,7 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C4D6E3A2ADFD0020095F8E5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4D6E392ADFD0020095F8E5 /* main.swift */; };
+		2C03094B2AE7942D0092780C /* CalendarUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C03094A2AE7942D0092780C /* CalendarUtils.swift */; };
+		2C03094D2AE794E60092780C /* AsciiArtBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C03094C2AE794E60092780C /* AsciiArtBanner.swift */; };
+		2C0309552AE8EB350092780C /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0309542AE8EB350092780C /* Settings.swift */; };
+		2C4D6E3A2ADFD0020095F8E5 /* entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4D6E392ADFD0020095F8E5 /* entry.swift */; };
+		2CE4EBF62AF23470007A1A65 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 2CE4EBF52AF23470007A1A65 /* ArgumentParser */; };
+		2CE4EBF82AF23470007A1A65 /* generate-manual in Frameworks */ = {isa = PBXBuildFile; productRef = 2CE4EBF72AF23470007A1A65 /* generate-manual */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +28,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2C03094A2AE7942D0092780C /* CalendarUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtils.swift; sourceTree = "<group>"; };
+		2C03094C2AE794E60092780C /* AsciiArtBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsciiArtBanner.swift; sourceTree = "<group>"; };
+		2C0309542AE8EB350092780C /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		2C4D6E362ADFD0020095F8E5 /* CalSync */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CalSync; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C4D6E392ADFD0020095F8E5 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		2C4D6E392ADFD0020095F8E5 /* entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = entry.swift; sourceTree = "<group>"; };
+		2CE4EBF02AF22F32007A1A65 /* CalSync.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CalSync.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,17 +41,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CE4EBF62AF23470007A1A65 /* ArgumentParser in Frameworks */,
+				2CE4EBF82AF23470007A1A65 /* generate-manual in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C03094E2AE798120092780C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		2C4D6E2D2ADFD0020095F8E5 = {
 			isa = PBXGroup;
 			children = (
 				2C4D6E382ADFD0020095F8E5 /* CalSync */,
 				2C4D6E372ADFD0020095F8E5 /* Products */,
+				2C03094E2AE798120092780C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,7 +76,11 @@
 		2C4D6E382ADFD0020095F8E5 /* CalSync */ = {
 			isa = PBXGroup;
 			children = (
-				2C4D6E392ADFD0020095F8E5 /* main.swift */,
+				2CE4EBF02AF22F32007A1A65 /* CalSync.entitlements */,
+				2C4D6E392ADFD0020095F8E5 /* entry.swift */,
+				2C0309542AE8EB350092780C /* Settings.swift */,
+				2C03094C2AE794E60092780C /* AsciiArtBanner.swift */,
+				2C03094A2AE7942D0092780C /* CalendarUtils.swift */,
 			);
 			path = CalSync;
 			sourceTree = "<group>";
@@ -78,6 +101,10 @@
 			dependencies = (
 			);
 			name = CalSync;
+			packageProductDependencies = (
+				2CE4EBF52AF23470007A1A65 /* ArgumentParser */,
+				2CE4EBF72AF23470007A1A65 /* generate-manual */,
+			);
 			productName = CalSync;
 			productReference = 2C4D6E362ADFD0020095F8E5 /* CalSync */;
 			productType = "com.apple.product-type.tool";
@@ -106,6 +133,9 @@
 				Base,
 			);
 			mainGroup = 2C4D6E2D2ADFD0020095F8E5;
+			packageReferences = (
+				2CE4EBF42AF23470007A1A65 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+			);
 			productRefGroup = 2C4D6E372ADFD0020095F8E5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -120,7 +150,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C4D6E3A2ADFD0020095F8E5 /* main.swift in Sources */,
+				2C4D6E3A2ADFD0020095F8E5 /* entry.swift in Sources */,
+				2C03094B2AE7942D0092780C /* CalendarUtils.swift in Sources */,
+				2C0309552AE8EB350092780C /* Settings.swift in Sources */,
+				2C03094D2AE794E60092780C /* AsciiArtBanner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,7 +281,12 @@
 		2C4D6E3E2ADFD0020095F8E5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = CalSync/CalSync.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GKK3S8K4V3;
+				ENABLE_HARDENED_RUNTIME = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tpreece101.CalSync;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -257,7 +295,12 @@
 		2C4D6E3F2ADFD0020095F8E5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = CalSync/CalSync.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GKK3S8K4V3;
+				ENABLE_HARDENED_RUNTIME = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tpreece101.CalSync;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -285,6 +328,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2CE4EBF42AF23470007A1A65 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2CE4EBF52AF23470007A1A65 /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CE4EBF42AF23470007A1A65 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
+		};
+		2CE4EBF72AF23470007A1A65 /* generate-manual */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CE4EBF42AF23470007A1A65 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = "generate-manual";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2C4D6E2E2ADFD0020095F8E5 /* Project object */;
 }
