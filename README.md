@@ -44,6 +44,8 @@ A Sync in the terms of CalSync is a job that will copy events from one calendar 
 * What do you want the copied event to be called?
 
 **Note a Sync is only one-way** if you want to sync two ways you will need two syncs (you can just add another by running `CalSync add` again)
+
+You can set up a Sync between any two calendars that have been added to your Apple Calendar app. When you run the `CalSync add` command it will list your available calendars and ask you which one you want to pull from and push to.
 ### Run
 `CalSync run` will run all configured syncs, if you've just installed CalSync you won't have any so you'll need to configure some using `CalSync add`
 
