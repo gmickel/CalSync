@@ -1,6 +1,6 @@
 # CalSync
 ## Installation
-1. Download the CalSync executable from one of the releases (the one just called `CalSync` in the Assets section)
+1. Download the CalSync executable from the most recent release [here](https://github.com/TPreece101/CalSync/releases) (the one just called `CalSync` in the Assets section)
 2. Open a terminal wherever you downloaded the executable
 3. Make it executable with `chmod +x CalSync`
 4. Open the folder in Finder, right click CalSync and click Open
