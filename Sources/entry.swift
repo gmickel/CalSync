@@ -30,7 +30,7 @@ struct RunCommand: ParsableCommand {
         commandName: "run",
         abstract: "Run configured syncs"
     )
-    
+
     func run() {
         let eventStore = EKEventStore()
         
