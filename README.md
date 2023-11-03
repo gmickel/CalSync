@@ -59,7 +59,7 @@ A Sync in the terms of CalSync is a job that will copy events from one calendar 
 ## Scheduling the Sync
 1. Download the `com.tpreece101.calsync.plist` file
 2. Open a terminal and move the file with `mv com.tpreece101.calsync.plist ~/Library/LaunchAgents/`
-3. Load it is a launch agent using `launchctl load ~/Library/LaunchAgents/com.tpreece101.calsync.plist`
+3. Load it as a launch agent using `launchctl load ~/Library/LaunchAgents/com.tpreece101.calsync.plist`
 4. Start the launch agent with `launchctl start com.tpreece101.calsync.plist`
 
 This will run the `CalSync run` command every 15 minutes in the background with any logs going to `/tmp/CalSync_output.log`
