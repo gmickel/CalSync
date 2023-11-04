@@ -1,13 +1,8 @@
 # CalSync
 ## Installation
-1. Download the CalSync executable from the most recent release [here](https://github.com/TPreece101/CalSync/releases) (the one just called `CalSync` in the Assets section)
-2. Open a terminal wherever you downloaded the executable
-3. Make it executable with `chmod +x CalSync`
-4. Open the folder in Finder, right click CalSync and click Open
-5. There will be an unidentified developer warning - click Open (this is because I don't want to pay £79 for an Apple Developer Account 😅) if the application is working you should see the CalSync logo
-6. Move the executable with `mv CalSync /usr/local/bin/`
-7. Verify that the installation is working by executing `CalSync` in any terminal
-8. You're done!
+1. Download the calsync-x.x.x.pkg from the most recent release [here](https://github.com/TPreece101/CalSync/releases)
+2. Install from the `.pkg` file by opening it from the finder
+3. Verify that the installation is working by executing `CalSync` in any terminal - if it is working you should see the CalSync logo
 
 ## Usage
 ```
@@ -65,9 +60,3 @@ You can set up a Sync between any two calendars that have been added to your App
 4. Start the launch agent with `launchctl start com.tpreece101.calsync.plist`
 
 This will run the `CalSync run` command every 15 minutes in the background with any logs going to `/tmp/CalSync_output.log`
-
-## Development
-Build the executable using
-```sh
-swift build -c release
-```

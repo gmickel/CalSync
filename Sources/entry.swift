@@ -34,7 +34,7 @@ struct RunCommand: ParsableCommand {
     func run() {
         let eventStore = EKEventStore()
         
-        eventStore.requestAccess(to: .event) { (granted, error) in
+        eventStore.requestFullAccessToEvents { (granted, error) in
             if granted && error == nil {
                 let calendars = eventStore.calendars(for: .event)
                 let settings = read_settings()
@@ -104,8 +104,8 @@ struct AddCommand: ParsableCommand {
     func run() {
         print(asciiArtBanner)
         let eventStore = EKEventStore()
-        
-        eventStore.requestAccess(to: .event) { (granted, error) in
+
+        eventStore.requestFullAccessToEvents { (granted, error) in
             if granted && error == nil {
                 let calendars = eventStore.calendars(for: .event)
                 
@@ -126,6 +126,7 @@ struct AddCommand: ParsableCommand {
         RunLoop.main.run()
     }
 }
+
 
 struct RemoveCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
