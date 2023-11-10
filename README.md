@@ -1,4 +1,6 @@
 # CalSync
+## Requirements
+* macOS 14+ (Sonoma)
 ## Installation
 1. Download the calsync-x.x.x.pkg from the most recent release [here](https://github.com/TPreece101/CalSync/releases)
 2. Install from the `.pkg` file by opening it from the finder
