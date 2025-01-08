@@ -3,6 +3,7 @@
 //  CalSync
 //
 //  Created by Thomas Preece on 24/10/2023.
+//  Modified by Gordon Mickel on 09/01/2024.
 //
 
 import Foundation
@@ -35,17 +36,13 @@ func createSyncSetting(calendars: [EKCalendar]) throws -> SyncSetting {
     print("\nEnter the number of days you want to sync:")
     let numDays = selectNumDays()
     
-    print("\nEnter the name of the generic event to use:")
-    guard let eventName = readLine() else {
-        throw CalSyncError.runtimeError("Event name not provided")
-    }
-    
-   let newSync = SyncSetting(
+  
+    let newSync = SyncSetting(
         pullCalendarIdentifier: pullCalendar.calendarIdentifier,
         pullCalendarTitle: pullCalendar.title,
         pushCalendarIdentifier: pushCalendar.calendarIdentifier,
         pushCalendarTitle: pushCalendar.title,
-        eventName: eventName, numDays: numDays
+        numDays: numDays
     )
     return newSync
 }
@@ -114,9 +111,15 @@ func getCalSyncEventsNextXDays(calendar: EKCalendar, eventStore: EKEventStore, n
 func deleteEvents(eventStore: EKEventStore, events: [EKEvent]) {
     for event in events {
         do {
-            try eventStore.remove(event, span: .thisEvent)
+            if event.notes?.contains("Made by CalSync") == true {
+                let span: EKSpan = event.recurrenceRules != nil ? .futureEvents : .thisEvent
+                try eventStore.remove(event, span: span)
+                print("Deleted event: \(event.title ?? "Untitled") (Recurring: \(event.recurrenceRules != nil))")
+            } else {
+                print("Warning: Attempted to delete non-CalSync event: \(event.title ?? "Untitled")")
+            }
         } catch {
-            print("Error deleting event: \(event) \(error.localizedDescription)")
+            print("Error deleting event: \(event.title ?? "Untitled") \(error.localizedDescription)")
         }
     }
 }

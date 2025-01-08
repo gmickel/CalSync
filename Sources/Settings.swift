@@ -3,6 +3,7 @@
 //  CalSync
 //
 //  Created by Thomas Preece on 25/10/2023.
+//  Modified by Gordon Mickel on 09/01/2024.
 //
 
 import Foundation
@@ -13,7 +14,6 @@ struct SyncSetting: Codable {
     let pullCalendarTitle: String
     let pushCalendarIdentifier: String
     let pushCalendarTitle: String
-    let eventName: String
     let numDays: Int
 }
 
