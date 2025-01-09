@@ -3,13 +3,12 @@
 //  CalSync
 //
 //  Created by Thomas Preece on 18/10/2023.
+//  Modified by Gordon Mickel on 09/01/2024.
 //
-
 import EventKit
 import Foundation
 import Dispatch
 import ArgumentParser
-
 
 @main
 struct CalSync: ParsableCommand {
@@ -30,7 +29,6 @@ struct RunCommand: ParsableCommand {
         commandName: "run",
         abstract: "Run configured syncs"
     )
-
     func run() {
         let eventStore = EKEventStore()
         
@@ -48,24 +46,71 @@ struct RunCommand: ParsableCommand {
                             throw CalSyncError.runtimeError("Could not find push calendar \(sync.pushCalendarIdentifier) in event store")
                         }
                         
+                        print("Starting sync from '\(pullCalendar.title)' to '\(pushCalendar.title)'")
+                        
                         // Clear out current CalSync events over sync horizon
                         let calSyncEvents = getCalSyncEventsNextXDays(calendar: pushCalendar, eventStore: eventStore, numDays: sync.numDays)
+                        print("Found \(calSyncEvents.count) existing CalSync events to clean up")
                         
                         deleteEvents(eventStore: eventStore, events: calSyncEvents)
                         
                         // Make new events
                         let events = getNonCalSyncEventsNextXDays(calendar: pullCalendar, eventStore: eventStore, numDays: sync.numDays)
+                        print("Found \(events.count) events to sync")
                         
                         for event in events {
-                            print("Event: \(String(describing: event.title))")
+                            print("Syncing event: '\(event.title ?? "Untitled")' from \(String(describing: event.startDate)) to \(String(describing: event.endDate))")
+                            print("Is recurring: \(event.recurrenceRules != nil)")
+                            
                             let newEvent = EKEvent(eventStore: eventStore)
-                            newEvent.title = sync.eventName
-                            newEvent.notes = "Made by CalSync"
+                            
+                            // Copy basic details
+                            newEvent.title = event.title
+                            newEvent.notes = "Made by CalSync\n\n" + (event.notes ?? "")
                             newEvent.startDate = event.startDate
                             newEvent.endDate = event.endDate
                             newEvent.calendar = pushCalendar
+                            newEvent.location = event.location
+                            newEvent.url = event.url
+                            newEvent.isAllDay = event.isAllDay
+                            newEvent.availability = event.availability
                             
-                            try eventStore.save(newEvent, span: .thisEvent)
+                            // Handle recurrence rules carefully
+                            if let recurrenceRules = event.recurrenceRules {
+                                print("Copying recurrence rules: \(recurrenceRules)")
+                                // Create new instances of recurrence rules to avoid reference issues
+                                newEvent.recurrenceRules = recurrenceRules.map { rule in
+                                    let newRule = EKRecurrenceRule(
+                                        recurrenceWith: rule.frequency,
+                                        interval: rule.interval,
+                                        daysOfTheWeek: rule.daysOfTheWeek,
+                                        daysOfTheMonth: rule.daysOfTheMonth,
+                                        monthsOfTheYear: rule.monthsOfTheYear,
+                                        weeksOfTheYear: rule.weeksOfTheYear,
+                                        daysOfTheYear: rule.daysOfTheYear,
+                                        setPositions: rule.setPositions,
+                                        end: rule.recurrenceEnd
+                                    )
+                                    return newRule
+                                }
+                            }
+                            
+                            // Copy alarms if any
+                            if let alarms = event.alarms {
+                                newEvent.alarms = alarms.map { alarm in
+                                    // Create new alarm instance to avoid reference issues
+                                    let newAlarm = EKAlarm(relativeOffset: alarm.relativeOffset)
+                                    return newAlarm
+                                }
+                            }
+                            
+                            do {
+                                let span: EKSpan = event.recurrenceRules != nil ? .futureEvents : .thisEvent
+                                try eventStore.save(newEvent, span: span)
+                                print("Successfully created event: \(newEvent.title ?? "Untitled")")
+                            } catch {
+                                print("Error saving event: \(error.localizedDescription)")
+                            }
                         }
                         
                     } catch {
@@ -104,7 +149,6 @@ struct AddCommand: ParsableCommand {
     func run() {
         print(asciiArtBanner)
         let eventStore = EKEventStore()
-
         eventStore.requestFullAccessToEvents { (granted, error) in
             if granted && error == nil {
                 let calendars = eventStore.calendars(for: .event)
@@ -126,7 +170,6 @@ struct AddCommand: ParsableCommand {
         RunLoop.main.run()
     }
 }
-
 
 struct RemoveCommand: ParsableCommand {
     static var configuration = CommandConfiguration(

@@ -1,6 +1,36 @@
+
 # Release Process
-1. Archive from XCode
-2. Sign the binary `codesign -f -o runtime --entitlements entitlements.plist --timestamp -s "Developer ID Application: Thomas Preece (GKK3S8K4V3)" CalSync\ 2023-11-04\ 16-23-23/Products/usr/local/bin/CalSync`
-3. Build the package `pkgbuild --root "CalSync 2023-11-04 16-23-23/Products" --identifier "com.tpreece101.calsync" --version "0.1.1" --install-location "/" --sign "Developer ID Installer: Thomas Preece (GKK3S8K4V3)" calsync-0.1.1.pkg`
-4. Notarise the package `xcrun notarytool submit calsync-0.1.1.pkg --keychain-profile "notary-profile" --wait`
-5. Attach identity `xcrun stapler staple calsync-0.1.1.pkg`
+
+1. Archive from Xcode
+   - Select Product > Archive
+   - Note the created archive path (e.g., `CalSync 2025-01-09 00.19.xcarchive`)
+
+2. Sign the binary:
+   ```bash
+   codesign -f -o runtime --entitlements entitlements.plist --timestamp -s "[Your Developer ID Application Certificate]" /path/to/archive/CalSync.xcarchive/Products/usr/local/bin/CalSync
+   ```
+
+3. Build the package:
+   ```bash
+   pkgbuild --root "/path/to/archive/CalSync.xcarchive/Products" \
+            --identifier "tech.mickel.calsync" \
+            --version "0.2.0" \
+            --install-location "/" \
+            --sign "[Your Developer ID Installer Certificate]" \
+            calsync-0.2.0.pkg
+   ```
+
+4. Notarize the package:
+   ```bash
+   xcrun notarytool submit calsync-0.2.0.pkg --keychain-profile "[Your Notarization Profile]" --wait
+   ```
+
+5. Attach identity:
+   ```bash
+   xcrun stapler staple calsync-0.2.0.pkg
+   ```
+
+Note: 
+- Replace placeholders in square brackets with your actual credentials
+- Keep your certificates and profile information secure
+- Never commit actual certificate or profile details to the repository
